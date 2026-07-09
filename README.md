@@ -1,4 +1,4 @@
-# 🏭 Factory Softwarehouse
+# 🏭 Factory Software House
 
 **Motor de produção da software house de design systems**: pipeline de 7 fases operado por agentes inteligentes, com gates humanos obrigatórios em cada etapa crítica.
 
