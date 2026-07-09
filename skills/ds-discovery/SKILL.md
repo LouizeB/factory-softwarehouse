@@ -12,17 +12,35 @@ Nome cliente-facing: **Descoberta & Briefing**.
 ## Pré-requisitos
 
 - Repositório do cliente clonado (trabalha-se no repo do cliente, não da agência).
-- Insumos da call de discovery: anotações, brand guide (se existir), referências citadas.
+- **Insumos do briefing coletados** (checklist abaixo) — a call de discovery serve para colher o que o cliente não mandou antes.
+- Se houve auditoria (`ds-audit`), o `audit-report.md` é insumo primário do Analyst.
 - Se `.planning/brief.md` já existe e foi aprovado, não refazer — seguir para o passo 2 ou 3 conforme o que falta.
+
+## Insumos do briefing (colher do cliente)
+
+Pedir **antes** da call e completar durante ela. Registrar em `.planning/insumos/` o que for arquivo, e no brief o que for resposta:
+
+- [ ] **Materiais de marca**: brand guide, logos, paleta, tipografias (arquivos/licenças), iconografia
+- [ ] **Tom e voz**: guia de escrita, exemplos de microcopy (erros, vazios, confirmações)
+- [ ] **Requisitos técnicos**: stacks dos times consumidores, browsers suportados, nível de acessibilidade exigido (ex.: WCAG AA), restrições de infra
+- [ ] **Inventário existente**: UI kit, Figma, biblioteca de componentes ou DS atual (se houver — considerar rodar `ds-audit` antes)
+- [ ] **Usuário final / personas**: quem usa os produtos, contextos de uso, requisitos especiais (baixa visão, mobile-first, ambientes offline)
+- [ ] **Produtos**: quais produtos/telas consumirão o DS, prints ou acesso a staging
+- [ ] **Referências**: design systems que admiram/rejeitam e por quê
+
+Item faltando não bloqueia a fase, mas **entra como pendência nomeada no brief** — lacuna de insumo é risco de retrabalho e o cliente precisa vê-la por escrito.
 
 ## Passo 1 — Agente Analyst → `brief.md`
 
-Despachar um subagente com APENAS os insumos brutos da call (não o histórico da conversa). Missão: extrair intenção de negócio e restrições de marca. O brief deve responder:
+Despachar um subagente com APENAS os insumos brutos (checklist acima + anotações da call — não o histórico da conversa). Missão: extrair intenção de negócio e restrições de marca. O brief deve responder:
 
 - Existe brand guide? Onde? O que ele fixa (cores, tipografia, tom)?
+- Tom e voz: o que o guia de escrita fixa para microcopy dos componentes?
 - Quais times/produtos vão consumir o design system? Em que stacks?
+- Quem é o usuário final (personas)? Algum requisito que afete componentes (a11y, mobile-first, densidade)?
 - Referências citadas pelo cliente (Material, Radix, Carbon, outro DS)? O que gostam/rejeitam nelas?
 - Restrições duras: acessibilidade exigida, browsers suportados, prazo, orçamento do pacote vendido.
+- Insumos pendentes: o que o cliente ainda deve, e o que fica bloqueado sem isso.
 
 Saída: `.planning/brief.md`.
 

@@ -10,6 +10,7 @@ Motor de produção da software house de design systems: pipeline de 7 fases ope
 
 | Fase | O que produz | Gate humano |
 |---|---|---|
+| `ds-audit` *(opcional)* | `audit-report.md` — diagnóstico do DS/UI kit existente, evoluir vs. reconstruir | Delivery lead revisa antes do cliente |
 | `ds-discovery` | `brief.md`, `prd.md`, `component-inventory.md`, `tokens.draft.json` | Delivery lead aprova brief/PRD |
 | `ds-sketch` | `sketches/` (HTML autocontido), `design-decisions.md` | Cliente/design reviewer escolhe variante |
 | `ds-architecture` | `architecture.md` (9 decisões vinculantes) | Delivery lead aprova arquitetura |
@@ -26,6 +27,7 @@ Cada fase roda em **contexto novo**; o estado vive em `.planning/` no repositór
 
 ```
 skills/
+├── ds-audit/SKILL.md    # opcional: auditoria de DS/UI kit existente
 ├── ds-discovery/SKILL.md
 ├── ds-sketch/SKILL.md
 ├── ds-architecture/SKILL.md
