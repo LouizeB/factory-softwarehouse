@@ -6,7 +6,7 @@
 
 ## 🎯 Visão Geral
 
-Este repositório contém as **skills** (prompts especializados) e **agentes** que orquestram o processo de desenvolvimento de design systems, desde a descoberta até a entrega, garantindo qualidade, documentação e governança em cada fase.
+Este repositório contém as **skills** (prompts especializados) e **agentes** que orquestram o processo de desenvolvimento de design systems, desde a descoberta até a entrega, garantindo qualidade e rastreabilidade em cada decisão crítica.
 
 ---
 
@@ -71,29 +71,233 @@ factory-softwarehouse/
 
 ## 🚀 Instalação por Runtime
 
-### Claude Code
-```bash
-# Global
-cp -r skills/* ~/.claude/skills/
+Escolha a plataforma que você usa e siga as instruções de instalação correspondente.
 
-# Ou local (no projeto do cliente)
-cp -r skills/* .claude/skills/
+### Claude Code
+
+**Global (disponível em todos os projetos):**
+```bash
+cp -r skills/* ~/.claude/skills/
+cp -r agents/ ~/.claude/agents/
 ```
+
+**Local (apenas no projeto do cliente):**
+```bash
+cp -r skills/* .claude/skills/
+cp -r agents/ .claude/agents/
+```
+
+**Ativação:** As skills aparecem automaticamente nas sugestões do Claude Code.
+
+---
 
 ### Claude Cowork
+
+**Workspace-level (obrigatório para sub-agentes):**
 ```bash
-# Copiar pastas para a raiz do workspace (lidas automaticamente)
-cp -r skills/* ./
+# Na raiz do workspace do cliente
+cp -r skills/ ./
 cp -r agents/ ./
 
-# Necessário para sub-agentes em ds-build
+# As pastas são lidas automaticamente pelo Cowork
 ```
 
+**Configuração:** Declare os agentes no arquivo `cowork.json` (se necessário):
+```json
+{
+  "agents": {
+    "implementer": "agents/implementer.md"
+  },
+  "skills": {
+    "ds-discovery": "skills/ds-discovery/SKILL.md",
+    "ds-sketch": "skills/ds-sketch/SKILL.md",
+    "ds-architecture": "skills/ds-architecture/SKILL.md",
+    "ds-plan": "skills/ds-plan/SKILL.md",
+    "ds-build": "skills/ds-build/SKILL.md",
+    "ds-qa": "skills/ds-qa/SKILL.md",
+    "ds-report": "skills/ds-report/SKILL.md",
+    "ds-ship": "skills/ds-ship/SKILL.md"
+  }
+}
+```
+
+---
+
+### GitHub Copilot
+
+**Instalação no VS Code/JetBrains:**
+```bash
+# 1. Clone o repo de skills localmente
+git clone https://github.com/LouizeB/factory-softwarehouse ~/factory-softwarehouse
+
+# 2. Configure a extensão Copilot no seu IDE
+# VS Code: Copilot Chat → Settings → Custom Instructions
+# Adicione o caminho para as skills:
+~/factory-softwarehouse/skills/
+
+# 3. Configure o arquivo .copilot/config.json no projeto do cliente
+cat > .copilot/config.json << EOF
+{
+  "custom_instructions": "../factory-softwarehouse/skills",
+  "agents": {
+    "implementer": "../factory-softwarehouse/agents/implementer.md"
+  }
+}
+EOF
+```
+
+**Uso:** Abra o Chat do Copilot e comande:
+```
+@skills ds-discovery
+```
+
+---
+
+### Codex
+
+**Instalação via OpenAI API:**
+```bash
+# 1. Exporte as skills como prompts de sistema
+cat > .codex/system-prompt.txt << 'EOF'
+$(cat skills/ds-discovery/SKILL.md)
+---
+$(cat skills/ds-sketch/SKILL.md)
+---
+$(cat skills/ds-architecture/SKILL.md)
+---
+$(cat skills/ds-plan/SKILL.md)
+---
+$(cat skills/ds-build/SKILL.md)
+---
+$(cat skills/ds-qa/SKILL.md)
+---
+$(cat skills/ds-report/SKILL.md)
+---
+$(cat skills/ds-ship/SKILL.md)
+EOF
+
+# 2. Configure a chamada à API do Codex com system prompt
+export CODEX_SYSTEM_PROMPT=$(cat .codex/system-prompt.txt)
+```
+
+**Exemplo de chamada com curl:**
+```bash
+curl https://api.openai.com/v1/completions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "code-davinci-002",
+    "prompt": "'"$(cat .codex/system-prompt.txt)"'\n\n[Seu comando aqui]",
+    "max_tokens": 2048,
+    "temperature": 0.3
+  }'
+```
+
+**Via Node.js:**
+```javascript
+import { OpenAI } from "openai";
+import fs from "fs";
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const systemPrompt = fs.readFileSync(".codex/system-prompt.txt", "utf-8");
+
+async function callCodex(userMessage) {
+  const response = await client.chat.completions.create({
+    model: "gpt-3.5-turbo-16k",
+    system: systemPrompt,
+    messages: [{ role: "user", content: userMessage }],
+    max_tokens: 2048,
+  });
+  return response.choices[0].message.content;
+}
+
+callCodex("Inicie a fase de ds-discovery...");
+```
+
+---
+
+### Devin (Cognition Labs)
+
+**Instalação via plataforma Devin:**
+```bash
+# 1. Importe o repositório no Devin
+# Dashboard → Projects → Import from GitHub
+# https://github.com/LouizeB/factory-softwarehouse
+
+# 2. Configure o prompt de sistema
+# Project Settings → Custom Instructions
+# Cole o conteúdo combinado de todas as skills
+
+# 3. Configure sub-agentes
+# Settings → Agents → Add Agent
+# Nome: implementer
+# Prompt: agents/implementer.md
+```
+
+**Arquivo de configuração `.devin/config.json`:**
+```json
+{
+  "project_name": "Factory DS Pipeline",
+  "system_prompt_from_file": "skills/ds-discovery/SKILL.md",
+  "agents": [
+    {
+      "name": "analyst",
+      "role": "discovery-analyst",
+      "prompt_file": "skills/ds-discovery/SKILL.md"
+    },
+    {
+      "name": "implementer",
+      "role": "component-builder",
+      "prompt_file": "agents/implementer.md"
+    }
+  ],
+  "workflows": [
+    {
+      "name": "design-system-pipeline",
+      "phases": [
+        "ds-discovery",
+        "ds-sketch",
+        "ds-architecture",
+        "ds-plan",
+        "ds-build",
+        "ds-qa",
+        "ds-ship"
+      ]
+    }
+  ],
+  "gates": {
+    "before_sketch": ["brief.md", "prd.md"],
+    "before_architecture": ["sketches", "design-decisions.md"],
+    "before_build": ["architecture.md"],
+    "before_ship": ["qa-report.md"]
+  }
+}
+```
+
+**Uso no Devin:**
+```
+@devin execute-workflow design-system-pipeline
+```
+
+---
+
 ### Cursor
+
+**Instalação local:**
 ```bash
 cp -r skills/* .cursor/skills/
 
-# Nota: Sem sub-agentes nativos — rodar tasks de ds-build sequencialmente
+# Nota: Cursor não suporta sub-agentes nativamente
+# As tasks de ds-build devem rodar sequencialmente
+```
+
+**Configuração `.cursor/config.json`:**
+```json
+{
+  "rules": ".cursorules",
+  "custom_instructions": "skills/",
+  "sequential_mode": true
+}
 ```
 
 ---
@@ -107,8 +311,9 @@ cd <repo-cliente>
 ```
 
 ### Passo 2: Instalar Skills e Agentes
-- Copiar as skills conforme sua plataforma (acima)
-- Copiar também `agents/` para o projeto do cliente
+- Escolha seu runtime acima
+- Copiar as skills conforme sua plataforma
+- Copiar também `agents/` para o projeto do cliente (exceto Codex/Cursor)
 
 ### Passo 3: Executar o Pipeline
 1. **Invocar `ds-discovery`** → Segue gates humanos obrigatórios
@@ -128,8 +333,9 @@ cd <repo-cliente>
 ## 📋 Checklist Rápido
 
 - [ ] Clonar repo do cliente
-- [ ] Instalar skills para sua plataforma (Code/Cowork/Cursor)
-- [ ] Copiar `agents/` para o projeto
+- [ ] Escolher runtime (Claude Code / Cowork / Copilot / Codex / Devin / Cursor)
+- [ ] Instalar skills conforme sua plataforma
+- [ ] Copiar `agents/` para o projeto (se suportado)
 - [ ] Invocar `ds-discovery`
 - [ ] Seguir gates humanos (delivery lead + cliente)
 - [ ] Passar por todas as 7 fases na ordem
@@ -139,12 +345,25 @@ cd <repo-cliente>
 
 ## ⚙️ Tecnologias & Métodos
 
-- **Agentes Claude**: Orquestração automática do pipeline
+- **Agentes Claude / Copilot / Codex / Devin**: Orquestração automática do pipeline
 - **Métodos**:
   - BMAD-METHOD (Business Model, Architecture, Design)
   - GSD (Getting Stuff Done — prototipagem rápida)
   - TDD (Test-Driven Development — na fase ds-build)
 - **Saídas**: Markdown, JSON (tokens), HTML (sketches), código TypeScript
+
+---
+
+## 🔄 Comparativo de Runtimes
+
+| Runtime | Sub-agentes | Contexto Isolado | Ledger | Recomendação |
+|---------|------------|-----------------|--------|--------------|
+| **Claude Code** | ❌ | ✅ Manual | Manual | Solo dev, prototipagem rápida |
+| **Claude Cowork** | ✅ Full | ✅ Automático | Automático | **Recomendado principal** |
+| **GitHub Copilot** | ⚠️ Limitado | ✅ Manual | Manual | Integração VS Code/IDE |
+| **Codex** | ❌ | ✅ Manual | Manual | APIs custom, automação |
+| **Devin** | ✅ Full | ✅ Automático | Automático | Autonomia máxima, end-to-end |
+| **Cursor** | ❌ | ✅ Manual | Manual | Sequencial, lightweight |
 
 ---
 
@@ -154,6 +373,7 @@ Para questões sobre o pipeline, métodos ou integração:
 - Consulte o vault `Factory - DS` (documentação de negócio)
 - Revise a SKILL.md correspondente à sua fase
 - Valide gates humanos obrigatórios antes de avançar
+- Verifique a configuração do seu runtime acima
 
 ---
 
