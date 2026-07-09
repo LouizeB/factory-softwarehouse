@@ -18,6 +18,8 @@ Motor de produção da software house de design systems: pipeline de 7 fases ope
 | `ds-qa` | `qa-report.md` (a11y, regressão visual, cross-browser) | — |
 | `ds-ship` | Docs, changesets, pacotes publicados, `release-notes.md` | Sign-off antes de `npm publish` |
 
+Skill de apoio (fora da sequência): `ds-report` — gera o relatório semanal cliente-facing a partir do ledger durante `ds-build`; delivery lead revisa e envia.
+
 Cada fase roda em **contexto novo**; o estado vive em `.planning/` no repositório do cliente, nunca na conversa. Métodos combinados: BMAD-METHOD (discovery/architecture), GSD (sketch, context engineering) e Superpowers (plan/build: TDD, subagentes, worktrees).
 
 ## Estrutura
@@ -30,6 +32,7 @@ skills/
 ├── ds-plan/SKILL.md
 ├── ds-build/SKILL.md
 ├── ds-qa/SKILL.md
+├── ds-report/SKILL.md   # apoio: relatório semanal ao cliente
 └── ds-ship/SKILL.md
 agents/
 └── implementer.md   # prompt do subagente implementador (usado por ds-build)

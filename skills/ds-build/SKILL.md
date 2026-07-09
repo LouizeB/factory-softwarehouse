@@ -7,7 +7,7 @@ description: Fase 5 do pipeline de design system — construção. Executa as ta
 
 Fase 5 do pipeline, a mais longa. Padrão **fresh-subagent-per-task**: cada task é executada por um subagente novo, sem contexto de conversa — só a task e o `architecture.md`. A sessão de controle orquestra e mantém o ledger.
 
-Nome cliente-facing: **Construção** — o cliente só vê o relatório semanal derivado do ledger.
+Nome cliente-facing: **Construção** — o cliente só vê o relatório semanal derivado do ledger (gerado pela skill `ds-report`, uma vez por semana durante toda esta fase).
 
 ## Pré-requisitos
 
