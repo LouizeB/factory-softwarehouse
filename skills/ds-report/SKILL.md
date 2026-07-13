@@ -39,7 +39,7 @@ Criar `relatorios/AAAA-MM-DD.md` (data do dia):
 O que entra em construção, em que ordem.
 
 ## Pontos de atenção
-Só se houver: decisões pendentes do cliente, riscos de prazo com causa e plano.
+S� se houver: decisões pendentes do cliente, riscos de prazo com causa e plano.
 Se não houver, escrever "Nenhum — projeto dentro do previsto."
 ```
 

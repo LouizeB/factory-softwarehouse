@@ -56,7 +56,9 @@ Saída: `.planning/prd.md`.
 
 ## Passo 3 — Agente UX-Designer → inventário + tokens
 
-Despachar subagente novo que lê **`brief.md` + `prd.md`**. Missão: inventário de componentes por camada. Para cada componente:
+Despachar subagente novo que lê **`brief.md` + `prd.md`**. Missão: inventário de componentes por camada. Consulte `references/component-taxonomy.md` como checklist de cobertura — ele lista os itens P0/P1/P2 esperados por categoria; não invente categorias do zero, e sinalize no próprio inventário qualquer P0 da taxonomia que ficar de fora do escopo v1 (vira pendência para o delivery lead decidir, não omissão silenciosa).
+
+Para cada componente:
 
 - Camada (Foundations / Primitives / Composite / Patterns)
 - Estados obrigatórios (default, hover, focus, active, disabled, error, loading — os que se aplicam)

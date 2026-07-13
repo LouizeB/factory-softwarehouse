@@ -1,0 +1,2 @@
+ID,Categoria,Componente,Prioridade,Existe no Figma,Existe em código,Paridade design/código,Web Component,Tokens,Light,Dark,Multimarca,Responsivo,Teclado,Leitor de tela,WCAG 2.2,Testes unitários,Testes a11y,Visual regression,Storybook,Documentação,Owner,Status,Problema encontrado,Ação recomendada,Esforço,Dependências,Versão-alvo,Maturidade (0-5)
+CMP-001,Forms,Text Input,P0,,,,,,,,,,,,,,,,,,,,,,,,,
